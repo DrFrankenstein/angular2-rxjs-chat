@@ -1,16 +1,7 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import {
-  MessagesService,
-  ThreadsService,
-  UserService
-} from '../services/services';
-import {Observable} from 'rxjs';
-import {User, Thread, Message} from '../models';
+import { Component, OnInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { MessagesService, ThreadsService, UserService } from '../services/services';
+import { Observable } from 'rxjs';
+import { User, Thread, Message } from '../models';
 
 @Component({
   inputs: ['message'],
@@ -37,23 +28,27 @@ import {User, Thread, Message} from '../models';
   </div>
   `
 })
-export class ChatMessage implements OnInit {
+export class ChatMessage implements OnInit
+{
   message: Message;
   currentUser: User;
   incoming: boolean;
 
-  constructor(public userService: UserService) {
+  constructor(public userService: UserService)
+  { }
+
+  ngOnInit(): void
+  {
+    this.userService.currentUser
+      .subscribe(this.onCurrentUserChanged.bind(this));
   }
 
-  ngOnInit(): void {
-    this.userService.currentUser
-      .subscribe(
-        (user: User) => {
-          this.currentUser = user;
-          if (this.message.author && user) {
-            this.incoming = this.message.author.id !== user.id;
-          }
-        });
+  onCurrentUserChanged(user: User): void
+  {
+    this.currentUser = user;
+
+    if (this.message.author && user)
+      this.incoming = this.message.author.id !== user.id;
   }
 
 }
@@ -107,8 +102,9 @@ export class ChatMessage implements OnInit {
     </div>
   `
 })
-export class ChatWindow implements OnInit {
-  messages: Observable<any>;
+export class ChatWindow implements OnInit
+{
+  messages: Observable<Message[]>;
   currentThread: Thread;
   draftMessage: Message;
   currentUser: User;
@@ -116,40 +112,43 @@ export class ChatWindow implements OnInit {
   constructor(public messagesService: MessagesService,
               public threadsService: ThreadsService,
               public userService: UserService,
-              public el: ElementRef) {
-  }
+              public el: ElementRef)
+  { }
 
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
     this.messages = this.threadsService.currentThreadMessages;
 
     this.draftMessage = new Message();
 
-    this.threadsService.currentThread.subscribe(
-      (thread: Thread) => {
-        this.currentThread = thread;
-      });
-
-    this.userService.currentUser
-      .subscribe(
-        (user: User) => {
-          this.currentUser = user;
-        });
-
-    this.messages
-      .subscribe(
-        (messages: Array<Message>) => {
-          setTimeout(() => {
-            this.scrollToBottom();
-          });
-        });
+    this.threadsService.currentThread.subscribe(this.onCurrentThreadChange.bind(this));
+    this.userService.currentUser.subscribe(this.onCurrentUserChange.bind(this));
+    this.messages.subscribe(this.onMessageNext.bind(this));
   }
 
-  onEnter(event: any): void {
+  onCurrentThreadChange(thread: Thread): void
+  {
+    this.currentThread = thread;
+  }
+
+  onCurrentUserChange(user: User): void
+  {
+    this.currentUser = user;
+  }
+
+  onMessageNext(): void
+  {
+    setTimeout(() => this.scrollToBottom());
+  }
+
+  onEnter(event: Event): void
+  {
     this.sendMessage();
     event.preventDefault();
   }
 
-  sendMessage(): void {
+  sendMessage(): void
+  {
     let m: Message = this.draftMessage;
     m.author = this.currentUser;
     m.thread = this.currentThread;
@@ -158,9 +157,9 @@ export class ChatWindow implements OnInit {
     this.draftMessage = new Message();
   }
 
-  scrollToBottom(): void {
-    let scrollPane: any = this.el
-      .nativeElement.querySelector('.msg-container-base');
+  scrollToBottom(): void
+  {
+    let scrollPane: any = this.el.nativeElement.querySelector('.msg-container-base');
     scrollPane.scrollTop = scrollPane.scrollHeight;
   }
 
