@@ -1,8 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {ThreadsService} from '../services/services';
 import {Observable} from 'rxjs';
 import {Thread} from '../models';
@@ -26,25 +22,31 @@ import {Thread} from '../models';
   </div>
   `
 })
-export class ChatThread implements OnInit {
+export class ChatThread implements OnInit
+{
   thread: Thread;
   selected: boolean = false;
 
-  constructor(public threadsService: ThreadsService) {
+  constructor(public threadsService: ThreadsService)
+  { }
+
+  ngOnInit(): void
+  {
+    this.threadsService.currentThread.subscribe(this.onCurrentThreadChange.bind(this));
   }
 
-  ngOnInit(): void {
-    this.threadsService.currentThread
-      .subscribe( (currentThread: Thread) => {
-        this.selected = currentThread &&
-          this.thread &&
-          (currentThread.id === this.thread.id);
-      });
-  }
-
-  clicked(event: any): void {
+  clicked(event: MouseEvent): void
+  {
     this.threadsService.setCurrentThread(this.thread);
     event.preventDefault();
+  }
+
+  onCurrentThreadChange(currentThread: Thread): void
+  {
+    if (!currentThread || !this.thread)
+      return;
+
+    this.selected = currentThread.id === this.thread.id;
   }
 }
 
@@ -66,10 +68,12 @@ export class ChatThread implements OnInit {
     </div>
   `
 })
-export class ChatThreads {
-  threads: Observable<any>;
+export class ChatThreads
+{
+  threads: Observable<Thread[]>;
 
-  constructor(public threadsService: ThreadsService) {
+  constructor(public threadsService: ThreadsService)
+  {
     this.threads = threadsService.orderedThreads;
   }
 }
