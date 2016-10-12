@@ -6,28 +6,17 @@
  *
  */
 
-import {
-  NgModule,
-  Component
-} from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import {
-  FormsModule
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 /*
  * Components
  */
 import {ChatNavBar} from './components/ChatNavBar';
-import {
-  ChatThreads,
-  ChatThread
-  } from './components/ChatThreads';
-import {
-  ChatWindow,
-  ChatMessage
-  } from './components/ChatWindow';
+import { ChatThreads, ChatThread } from './components/ChatThreads';
+import { ChatWindow, ChatMessage } from './components/ChatWindow';
 
 /*
  * Injectables
@@ -38,11 +27,7 @@ import {utilInjectables} from './util/util';
 /*
  * Services
  */
-import {
-  MessagesService,
-  ThreadsService,
-  UserService
-} from './services/services';
+import { MessagesService, ThreadsService, UserService } from './services/services';
 
 import {ChatExampleData} from './ChatExampleData';
 
@@ -66,7 +51,8 @@ require('../css/styles.css');
 class ChatApp {
   constructor(public messagesService: MessagesService,
               public threadsService: ThreadsService,
-              public userService: UserService) {
+              public userService: UserService)
+  {
     ChatExampleData.init(messagesService, threadsService, userService);
   }
 }

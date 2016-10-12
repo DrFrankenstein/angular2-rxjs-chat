@@ -4,12 +4,14 @@ import {User, Thread, Message} from '../models';
 
 let initialMessages: Message[] = [];
 
-interface IMessagesOperation extends Function {
+interface IMessagesOperation extends Function
+{
   (messages: Message[]): Message[];
 }
 
 @Injectable()
-export class MessagesService {
+export class MessagesService
+{
   // a stream that publishes new messages only once
   newMessages: Subject<Message> = new Subject<Message>();
 
@@ -25,13 +27,11 @@ export class MessagesService {
   create: Subject<Message> = new Subject<Message>();
   markThreadAsRead: Subject<any> = new Subject<any>();
 
-  constructor() {
+  constructor()
+  {
     this.messages = this.updates
       // watch the updates and accumulate operations on the messages
-      .scan((messages: Message[],
-             operation: IMessagesOperation) => {
-               return operation(messages);
-             },
+      .scan((messages: Message[], operation: IMessagesOperation) => operation(messages),
             initialMessages)
       // make sure we can share the most recent list of messages across anyone
       // who's interested in subscribing and cache the last known list of
@@ -54,10 +54,8 @@ export class MessagesService {
     // entirely. The pros are that it is potentially clearer. The cons are that
     // the stream is no longer composable.
     this.create
-      .map( function(message: Message): IMessagesOperation {
-        return (messages: Message[]) => {
-          return messages.concat(message);
-        };
+      .map( (message: Message): IMessagesOperation => {
+        return (messages: Message[]) => messages.concat(message);
       })
       .subscribe(this.updates);
 
@@ -85,11 +83,13 @@ export class MessagesService {
   }
 
   // an imperative function call to this action stream
-  addMessage(message: Message): void {
+  addMessage(message: Message): void
+  {
     this.newMessages.next(message);
   }
 
-  messagesForThreadUser(thread: Thread, user: User): Observable<Message> {
+  messagesForThreadUser(thread: Thread, user: User): Observable<Message>
+  {
     return this.newMessages
       .filter((message: Message) => {
                // belongs to this thread

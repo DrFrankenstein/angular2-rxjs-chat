@@ -1,7 +1,6 @@
 /* tslint:disable:max-line-length */
 import {User, Thread, Message} from './models';
-import {MessagesService, ThreadsService,
-        UserService} from './services/services';
+import {MessagesService, ThreadsService, UserService} from './services/services';
 import * as moment from 'moment';
 
 // the person using the app us Juliet
@@ -80,8 +79,7 @@ export class ChatExampleData {
             thread: tEcho
           })
         );
-      },
-                null);
+      });
 
 
     // reverse bot
@@ -94,8 +92,7 @@ export class ChatExampleData {
             thread: tRev
           })
         );
-      },
-                null);
+      });
 
     // waiting bot
     messagesService.messagesForThreadUser(tWait, wait)
@@ -122,8 +119,7 @@ export class ChatExampleData {
             );
           },
           waitTime * 1000);
-      },
-                null);
+      });
 
 
   }
